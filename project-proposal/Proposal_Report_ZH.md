@@ -81,6 +81,17 @@
 | miss_distance | 6745.53 | 17210647.11 | 37845843.44 | 56548383.98 | 74798651.45 | 37066546.03 |
 | absolute_magnitude | 9.23 | 21.34 | 23.70 | 25.70 | 33.20 | 23.53 |
 
+#### Pearson 相關係數摘要（支援 3.3 觀察結論）
+
+| 變數組合 | Pearson r | 解讀 |
+|---|---:|---|
+| hazardous vs absolute_magnitude | -0.365 | 中度負相關；絕對星等越低（通常越亮/尺寸傾向越大），危險機率越高 |
+| hazardous vs relative_velocity | 0.191 | 弱到中度正相關；相對速度越高，越可能被判為危險 |
+| hazardous vs miss_distance | 0.042 | 極弱正相關；僅靠 miss_distance 的判別力有限 |
+| est_diameter_min vs est_diameter_max | 1.000 | 幾乎完全共線（高度冗餘） |
+| absolute_magnitude vs est_diameter_min | -0.560 | 中度負相關；符合星等與尺寸的物理關係 |
+| absolute_magnitude vs est_diameter_max | -0.560 | 中度負相關；符合星等與尺寸的物理關係 |
+
 ### 3.3 性質、規律與有趣觀察
 
 1. **高度冗餘**：`est_diameter_min` 與 `est_diameter_max` 幾乎完全共線（相關係數約 1.0）。

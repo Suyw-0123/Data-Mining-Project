@@ -81,6 +81,17 @@ Method note: all statistics were computed from the same `neo.csv` snapshot. Repo
 | miss_distance | 6745.53 | 17210647.11 | 37845843.44 | 56548383.98 | 74798651.45 | 37066546.03 |
 | absolute_magnitude | 9.23 | 21.34 | 23.70 | 25.70 | 33.20 | 23.53 |
 
+#### Pearson Correlation Summary (supports Section 3.3 findings)
+
+| Pair | Pearson r | Interpretation |
+|---|---:|---|
+| hazardous vs absolute_magnitude | -0.365 | Moderate negative relation; lower magnitude (brighter/larger tendency) is associated with higher hazard probability |
+| hazardous vs relative_velocity | 0.191 | Weak-to-moderate positive relation; faster objects are more likely to be hazardous |
+| hazardous vs miss_distance | 0.042 | Very weak positive relation; miss distance alone has limited predictive power |
+| est_diameter_min vs est_diameter_max | 1.000 | Near-perfect collinearity (strong redundancy) |
+| absolute_magnitude vs est_diameter_min | -0.560 | Moderate negative relation; consistent with known magnitude–size behavior |
+| absolute_magnitude vs est_diameter_max | -0.560 | Moderate negative relation; consistent with known magnitude–size behavior |
+
 ### 3.3 Properties, Patterns, and Interesting Findings
 
 1. **Strong redundancy**: `est_diameter_min` and `est_diameter_max` are almost perfectly collinear (corr ≈ 1.0).
