@@ -1,8 +1,5 @@
 # 資料探勘期末專題 Proposal（中文）
 
-## 專題名稱
-**以 Explainable AI 預測並解釋 NASA 近地天體「是否具潛在危險性」**
-
 
 ## 選用資料集
 - Kaggle： https://www.kaggle.com/datasets/sameepvani/nasa-nearest-earth-objects
@@ -74,7 +71,7 @@
 
 #### 數值欄位摘要（本機統計）
 
-方法說明：以下統計皆來自同一份 `neo.csv` 快照（取得時間 2026-04-15）。文中相關係數採 Pearson correlation；與 `hazardous` 的相關係數計算時，標籤編碼為 True=1、False=0。
+方法說明：以下統計皆來自同一份 `neo.csv` 快照。文中相關係數採 Pearson correlation；與 `hazardous` 的相關係數計算時，標籤編碼為 True=1、False=0。
 
 | 欄位 | Min | Q1 | Median | Q3 | Max | Mean |
 |---|---:|---:|---:|---:|---:|---:|

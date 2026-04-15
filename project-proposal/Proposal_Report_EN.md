@@ -1,8 +1,5 @@
 # Data Mining Term Project Proposal (English)
 
-## Project Title
-**Predicting and Explaining Potentially Hazardous Near-Earth Objects (NEOs) with Explainable AI**
-
 
 ## Selected Dataset
 - Kaggle: https://www.kaggle.com/datasets/sameepvani/nasa-nearest-earth-objects
@@ -55,8 +52,7 @@ For each prediction, generate both:
 ## 3) Dataset Observation (40%)
 
 ### 3.1 Dataset Requirement Check
-- Minimum requirement from proposal rules: **at least 50,000 instances**
-- Our selected dataset contains **90,836 instances** and **10 columns** ✅
+- Our selected dataset contains **90,836 instances** and **10 columns** 
 
 Columns:
 `id`, `name`, `est_diameter_min`, `est_diameter_max`, `relative_velocity`, `miss_distance`, `orbiting_body`, `sentry_object`, `absolute_magnitude`, `hazardous`
@@ -75,7 +71,7 @@ Columns:
 
 #### Numeric Feature Summary (from local inspection)
 
-Method note: all statistics were computed from the same `neo.csv` snapshot (retrieved on 2026-04-15). Reported correlations use Pearson correlation; for correlation with `hazardous`, labels were encoded as True=1 and False=0.
+Method note: all statistics were computed from the same `neo.csv` snapshot. Reported correlations use Pearson correlation; for correlation with `hazardous`, labels were encoded as True=1 and False=0.
 
 | Feature | Min | Q1 | Median | Q3 | Max | Mean |
 |---|---:|---:|---:|---:|---:|---:|
