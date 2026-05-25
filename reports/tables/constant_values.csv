@@ -1,0 +1,4 @@
+column,unique_count,values
+orbiting_body,1,Earth
+sentry_object,1,False
+hazardous,2,"False, True"

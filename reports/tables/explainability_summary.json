@@ -1,0 +1,12 @@
+{
+  "threshold": 0.19,
+  "top_permutation_features": [
+    "miss_distance",
+    "log_miss_distance",
+    "absolute_magnitude",
+    "log_est_diameter_mean",
+    "est_diameter_min"
+  ],
+  "selected_case_count": 3,
+  "shap_status": "SHAP outputs created."
+}

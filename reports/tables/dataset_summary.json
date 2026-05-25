@@ -1,0 +1,8 @@
+{
+  "rows": 90836,
+  "columns": 10,
+  "hazardous_true": 8840,
+  "hazardous_false": 81996,
+  "hazardous_rate": 0.09731824386806993,
+  "missing_values": 0
+}

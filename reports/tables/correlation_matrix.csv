@@ -1,0 +1,7 @@
+,est_diameter_min,est_diameter_max,relative_velocity,miss_distance,absolute_magnitude,hazardous
+est_diameter_min,1.0,1.0,0.221553,0.142241,-0.560188,0.183363
+est_diameter_max,1.0,1.0,0.221553,0.142241,-0.560188,0.183363
+relative_velocity,0.221553,0.221553,1.0,0.327169,-0.353863,0.191185
+miss_distance,0.142241,0.142241,0.327169,1.0,-0.264168,0.042302
+absolute_magnitude,-0.560188,-0.560188,-0.353863,-0.264168,1.0,-0.365267
+hazardous,0.183363,0.183363,0.191185,0.042302,-0.365267,1.0

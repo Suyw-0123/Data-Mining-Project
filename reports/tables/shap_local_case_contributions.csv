@@ -1,0 +1,16 @@
+source_index,rank,feature,feature_value,shap_value,direction
+47556,1,log_miss_distance,15.83206940884226,0.18072493527759004,pushes_probability_up
+47556,2,miss_distance,7512428.014848026,0.17687882038202957,pushes_probability_up
+47556,3,est_diameter_min,0.1332155667,0.08512022533706957,pushes_probability_up
+47556,4,absolute_magnitude,21.5,0.07842870738472796,pushes_probability_up
+47556,5,log_est_diameter_mean,0.19519444017851084,0.0774408452762624,pushes_probability_up
+724,1,est_diameter_min,0.138852907,0.026446040947006505,pushes_probability_up
+724,2,log_est_diameter_mean,0.2026703772197673,0.02233495513951584,pushes_probability_up
+724,3,est_diameter_range,0.171631632,0.018757059390552947,pushes_probability_up
+724,4,est_diameter_mean,0.22466872300000001,0.017031478824931445,pushes_probability_up
+724,5,log_miss_distance,16.893442977879133,-0.014519759420208882,pushes_probability_down
+34800,1,log_miss_distance,15.803015654257793,0.18534903954771922,pushes_probability_up
+34800,2,miss_distance,7297303.959021041,0.17611315804628092,pushes_probability_up
+34800,3,absolute_magnitude,20.2,0.08489163224758246,pushes_probability_up
+34800,4,est_diameter_min,0.2424124811,0.08344563804194823,pushes_probability_up
+34800,5,log_est_diameter_mean,0.3309079515888128,0.07890154089584439,pushes_probability_up
