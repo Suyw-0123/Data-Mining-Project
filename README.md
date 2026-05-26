@@ -7,14 +7,14 @@ with probability calibration, threshold tuning, and SHAP-based explainability.
 
 | Document | Link |
 |---|---|
-| **Wiki (EN)** | [docs/wiki/Home\_EN.md](docs/wiki/Home_EN.md) |
-| **Wiki (ZH)** | [docs/wiki/Home\_ZH.md](docs/wiki/Home_ZH.md) |
-| Paper (EN) | [docs/paper/Paper\_EN.md](docs/paper/Paper_EN.md) |
-| Paper (ZH) | [docs/paper/Paper\_ZH.md](docs/paper/Paper_ZH.md) |
-| Proposal (EN) | [docs/project-proposal/Proposal\_Report\_EN.md](docs/project-proposal/Proposal_Report_EN.md) |
-| Proposal (ZH) | [docs/project-proposal/Proposal\_Report\_ZH.md](docs/project-proposal/Proposal_Report_ZH.md) |
-| Plan (EN) | [docs/plan/plan\_EN.md](docs/plan/plan_EN.md) |
-| Plan (ZH) | [docs/plan/plan\_ZH.md](docs/plan/plan_ZH.md) |
+| **Wiki (EN)** | [Home\_EN.md](docs/wiki/EN/Home_EN.md) |
+| **Wiki (ZH)** | [Home\_ZH.md](docs/wiki/ZH/Home_ZH.md) |
+| Paper (EN) | [Paper\_EN.md](docs/paper/Paper_EN.md) |
+| Paper (ZH) | [Paper\_ZH.md](docs/paper/Paper_ZH.md) |
+| Proposal (EN) | [Proposal\_Report\_EN.md](docs/project-proposal/Proposal_Report_EN.md) |
+| Proposal (ZH) | [Proposal\_Report\_ZH.md](docs/project-proposal/Proposal_Report_ZH.md) |
+| Plan (EN) | [plan\_EN.md](docs/plan/plan_EN.md) |
+| Plan (ZH) | [plan\_ZH.md](docs/plan/plan_ZH.md) |
 | Dataset (Kaggle) | [NASA Nearest Earth Objects](https://www.kaggle.com/datasets/sameepvani/nasa-nearest-earth-objects) |
 
 ---
