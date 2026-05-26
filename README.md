@@ -1,47 +1,130 @@
-# Data-Mining-Projects
+# NEO Hazard Risk — Data Mining Term Project
 
-Data Mining Term Project
+Binary classification of NASA Near-Earth Objects (NEOs) as hazardous or non-hazardous,
+with probability calibration, threshold tuning, and SHAP-based explainability.
 
-## Data set
+## References
 
-[Kaggle](https://www.kaggle.com/datasets/sameepvani/nasa-nearest-earth-objects)
+| Document | Link |
+|---|---|
+| Dataset (Kaggle) | [NASA Nearest Earth Objects](https://www.kaggle.com/datasets/sameepvani/nasa-nearest-earth-objects) |
+| Proposal (EN) | [project-proposal/Proposal_Report_EN.md](project-proposal/Proposal_Report_EN.md) |
+| Proposal (ZH) | [project-proposal/Proposal_Report_ZH.md](project-proposal/Proposal_Report_ZH.md) |
+| Plan (EN) | [plan/plan_EN.md](plan/plan_EN.md) |
+| Plan (ZH) | [plan/plan_ZH.md](plan/plan_ZH.md) |
 
-## Proposal
+---
 
-[English](project-proposal/Proposal_Report_EN.md)
+## Prerequisites
 
-[Chinese](project-proposal/Proposal_Report_ZH.md)
+| Tool | Version | Install |
+|---|---|---|
+| Python | ≥ 3.12 | [python.org](https://www.python.org/downloads/) |
+| uv | any recent | `pip install uv` or [docs.astral.sh/uv](https://docs.astral.sh/uv/getting-started/installation/) |
 
-## Plan
+---
 
-[English](plan/plan_EN.md)
+## Quickstart
 
-[Chinese](plan/plan_ZH.md)
-
-## Implementation
-
-This project uses `uv` for Python environment and dependency management.
-
-Run the full pipeline:
+### 1. Clone the repository
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache uv sync
-UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache uv run neo-eda
-UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache uv run neo-train
-UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache uv run neo-explain
+git clone <repo-url>
+cd Data-Mining-Projects
 ```
 
-Main outputs:
+### 2. Place the dataset
 
-- `reports/tables/model_metrics_validation.csv`
-- `reports/tables/hyperparameter_tuning_results.csv`
-- `reports/tables/final_test_metrics.csv`
-- `reports/tables/threshold_tuning_validation_calibrated.csv`
-- `reports/tables/permutation_importance.csv`
-- `reports/tables/shap_local_case_contributions.csv`
-- `reports/figures/final_precision_recall_curve.png`
-- `reports/figures/final_calibration_curve.png`
-- `reports/figures/shap_global_bar.png`
-- `reports/figures/shap_summary_beeswarm.png`
+Download `neo.csv` from Kaggle and put it at:
 
-The saved model artifact is written to `models/final_model.joblib` and is ignored by git because it is generated and relatively large.
+```
+data/neo.csv
+```
+
+### 3. Install dependencies
+
+```bash
+uv sync
+```
+
+This creates a virtual environment and installs all packages listed in `pyproject.toml`.
+
+> **Note (shared / restricted environments)**
+> If the default cache locations are not writable, prefix every `uv` command with:
+> ```bash
+> UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache uv ...
+> ```
+
+### 4. Run the pipeline
+
+Execute the three stages **in order**:
+
+```bash
+# Stage 1 — Exploratory Data Analysis
+uv run neo-eda
+
+# Stage 2 — Model training, tuning, and evaluation
+uv run neo-train
+
+# Stage 3 — Permutation importance and SHAP explanations
+#            (requires neo-train to have run first)
+uv run neo-explain
+```
+
+Each stage prints a short summary and the paths of files it wrote.
+
+---
+
+## Project structure
+
+```
+.
+├── data/
+│   └── neo.csv              ← dataset (not tracked by git)
+├── models/
+│   └── final_model.joblib   ← saved artifact (generated, not tracked by git)
+├── reports/
+│   ├── figures/             ← PNG plots
+│   └── tables/              ← CSV / JSON outputs
+├── src/neo_hazard/
+│   ├── config.py            ← paths and shared constants
+│   ├── data.py              ← data loading and validation
+│   ├── eda.py               ← neo-eda entry point
+│   ├── evaluation.py        ← metrics and threshold selection
+│   ├── explain.py           ← neo-explain entry point
+│   ├── features.py          ← feature engineering
+│   ├── plots.py             ← figure helpers
+│   └── train.py             ← neo-train entry point
+├── pyproject.toml
+└── uv.lock
+```
+
+---
+
+## Key outputs
+
+After running all three stages the following files are produced:
+
+| File | Description |
+|---|---|
+| `reports/tables/dataset_summary.json` | Row/column counts, class balance |
+| `reports/tables/numeric_summary.csv` | Descriptive statistics per feature |
+| `reports/tables/class_distribution.csv` | Class counts and ratios |
+| `reports/tables/correlation_matrix.csv` | Pearson correlation matrix |
+| `reports/tables/model_metrics_validation.csv` | Validation metrics for all models |
+| `reports/tables/hyperparameter_tuning_results.csv` | Best CV score per tuned model |
+| `reports/tables/threshold_tuning_validation_calibrated.csv` | F1/recall/precision at each threshold |
+| `reports/tables/final_test_metrics.csv` | Test-set metrics for the chosen model |
+| `reports/tables/final_test_predictions.csv` | Per-row predictions on the test set |
+| `reports/tables/permutation_importance.csv` | Feature importance by PR-AUC drop |
+| `reports/tables/shap_local_case_contributions.csv` | Top SHAP features for selected cases |
+| `reports/figures/target_distribution.png` | Class imbalance bar chart |
+| `reports/figures/numeric_distributions.png` | Histograms of raw features |
+| `reports/figures/correlation_heatmap.png` | Pearson heatmap |
+| `reports/figures/final_precision_recall_curve.png` | PR curve on test set |
+| `reports/figures/final_roc_curve.png` | ROC curve on test set |
+| `reports/figures/final_calibration_curve.png` | Probability calibration curve |
+| `reports/figures/permutation_importance.png` | Bar chart of permutation importance |
+| `reports/figures/shap_global_bar.png` | SHAP global feature importance |
+| `reports/figures/shap_summary_beeswarm.png` | SHAP beeswarm summary plot |
+| `models/final_model.joblib` | Serialised model artifact |
