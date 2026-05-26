@@ -8,10 +8,16 @@ from sklearn.metrics import PrecisionRecallDisplay, RocCurveDisplay
 
 
 def set_plot_style() -> None:
+    """
+    Apply one consistent seaborn style for every generated figure.
+    """
     sns.set_theme(style="whitegrid", context="notebook")
 
 
 def save_target_distribution(df: pd.DataFrame, target: str, path) -> None:
+    """
+    Save a bar chart showing the class imbalance of the target label.
+    """
     set_plot_style()
     fig, ax = plt.subplots(figsize=(6, 4))
     sns.countplot(data=df, x=target, hue=target, palette=["#4C78A8", "#F58518"], ax=ax, legend=False)
@@ -24,6 +30,9 @@ def save_target_distribution(df: pd.DataFrame, target: str, path) -> None:
 
 
 def save_numeric_distributions(df: pd.DataFrame, columns: list[str], path) -> None:
+    """
+    Save histograms for the main numeric variables used during EDA.
+    """
     set_plot_style()
     fig, axes = plt.subplots(2, 3, figsize=(14, 8))
     axes = axes.ravel()
@@ -38,6 +47,9 @@ def save_numeric_distributions(df: pd.DataFrame, columns: list[str], path) -> No
 
 
 def save_correlation_heatmap(corr: pd.DataFrame, path) -> None:
+    """
+    Save a heatmap for the prepared correlation matrix.
+    """
     set_plot_style()
     fig, ax = plt.subplots(figsize=(9, 7))
     sns.heatmap(corr, annot=True, fmt=".2f", cmap="vlag", center=0, square=True, ax=ax)
@@ -48,6 +60,10 @@ def save_correlation_heatmap(corr: pd.DataFrame, path) -> None:
 
 
 def save_precision_recall_curve(y_true, y_probability, path) -> None:
+    """
+    Save the precision-recall curve
+    used to assess imbalanced classification.
+    """
     set_plot_style()
     fig, ax = plt.subplots(figsize=(6, 5))
     PrecisionRecallDisplay.from_predictions(y_true, y_probability, ax=ax)
@@ -58,6 +74,9 @@ def save_precision_recall_curve(y_true, y_probability, path) -> None:
 
 
 def save_roc_curve(y_true, y_probability, path) -> None:
+    """
+    Save the ROC curve as a supplementary ranking-performance figure.
+    """
     set_plot_style()
     fig, ax = plt.subplots(figsize=(6, 5))
     RocCurveDisplay.from_predictions(y_true, y_probability, ax=ax)
@@ -68,6 +87,10 @@ def save_roc_curve(y_true, y_probability, path) -> None:
 
 
 def save_calibration_curve(model, X, y, path) -> None:
+    """
+    Save a calibration curve to check
+    whether predicted probabilities are reliable.
+    """
     set_plot_style()
     fig, ax = plt.subplots(figsize=(6, 5))
     CalibrationDisplay.from_estimator(model, X, y, n_bins=10, strategy="quantile", ax=ax)

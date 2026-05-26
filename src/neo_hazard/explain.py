@@ -14,6 +14,10 @@ from neo_hazard.plots import set_plot_style
 
 
 def save_permutation_importance(model, X_test, y_test) -> pd.DataFrame:
+    """
+    Compute PR-AUC permutation importance
+    and save both table and bar chart outputs.
+    """
     result = permutation_importance(
         model,
         X_test,
@@ -45,6 +49,10 @@ def save_permutation_importance(model, X_test, y_test) -> pd.DataFrame:
 
 
 def selected_cases(meta_test: pd.DataFrame, y_test: pd.Series, probability: np.ndarray, threshold: float) -> pd.DataFrame:
+    """
+    Pick representative TP/FN/FP cases
+    for local model explanation in the report.
+    """
     cases = meta_test.reset_index(drop=False).rename(columns={"index": "source_index"}).copy()
     cases["true_hazardous"] = y_test.reset_index(drop=True)
     cases["hazard_probability"] = probability
@@ -72,6 +80,10 @@ def selected_cases(meta_test: pd.DataFrame, y_test: pd.Series, probability: np.n
 
 
 def run_shap_explanations(model, X_train: pd.DataFrame, X_test: pd.DataFrame, selected: pd.DataFrame) -> str:
+    """
+    Generate global SHAP plots and
+    top local SHAP contributions for selected cases.
+    """
     try:
         import shap
     except ImportError:
@@ -81,6 +93,8 @@ def run_shap_explanations(model, X_train: pd.DataFrame, X_test: pd.DataFrame, se
     explain_sample = X_test.sample(min(120, len(X_test)), random_state=RANDOM_STATE)
 
     def predict_positive(data):
+        """Adapt SHAP array inputs back into DataFrames
+        before model prediction."""
         frame = pd.DataFrame(data, columns=X_train.columns)
         return probabilities_or_scores(model, frame)
 
@@ -124,6 +138,10 @@ def run_shap_explanations(model, X_train: pd.DataFrame, X_test: pd.DataFrame, se
 
 
 def main() -> None:
+    """
+    Load the trained artifact and export
+    permutation-importance and SHAP explanations.
+    """
     ensure_output_dirs()
     artifact_path = MODELS_DIR / "final_model.joblib"
     if not artifact_path.exists():

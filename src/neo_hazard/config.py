@@ -28,5 +28,9 @@ EXPECTED_COLUMNS = ID_COLUMNS + BASE_NUMERIC_FEATURES[:4] + CONSTANT_COLUMNS + [
 
 
 def ensure_output_dirs() -> None:
+    """
+    Create report and model output directories
+    before a pipeline command writes files.
+    """
     for path in [FIGURES_DIR, TABLES_DIR, MODELS_DIR]:
         path.mkdir(parents=True, exist_ok=True)

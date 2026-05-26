@@ -15,6 +15,10 @@ from sklearn.metrics import (
 
 
 def probabilities_or_scores(model, X: pd.DataFrame) -> np.ndarray:
+    """
+    Return positive-class probabilities,
+    falling back to sigmoid-scaled scores if needed.
+    """
     if hasattr(model, "predict_proba"):
         return model.predict_proba(X)[:, 1]
     if hasattr(model, "decision_function"):
@@ -31,6 +35,10 @@ def metric_row(
     split: str,
     threshold: float = 0.5,
 ) -> dict[str, float | int | str]:
+    """
+    Calculate classification, ranking, calibration,
+    and confusion-matrix metrics.
+    """
     y_pred = y_probability >= threshold
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[False, True]).ravel()
 
@@ -62,6 +70,9 @@ def threshold_table(
     y_probability: np.ndarray,
     thresholds: np.ndarray | None = None,
 ) -> pd.DataFrame:
+    """
+    Evaluate many probability thresholds on the same validation predictions.
+    """
     if thresholds is None:
         thresholds = np.round(np.arange(0.05, 0.951, 0.01), 2)
 
@@ -79,6 +90,10 @@ def threshold_table(
 
 
 def choose_threshold(table: pd.DataFrame) -> float:
+    """
+    Select the threshold with best F1,
+    using recall and precision as tie-breakers.
+    """
     candidates = table.copy()
     candidates = candidates.sort_values(
         ["f1", "recall", "precision", "threshold"],

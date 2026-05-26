@@ -20,6 +20,10 @@ from neo_hazard.plots import (
 
 
 def main() -> None:
+    """
+    Run EDA exports: summaries, data-quality tables,
+    correlations, and figures.
+    """
     ensure_output_dirs()
     df = load_neo_data(DATA_PATH)
 

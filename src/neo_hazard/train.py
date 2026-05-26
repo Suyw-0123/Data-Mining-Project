@@ -24,6 +24,10 @@ from neo_hazard.plots import save_calibration_curve, save_precision_recall_curve
 
 
 def imbalance_ratio(y_train: pd.Series) -> float:
+    """
+    Compute the negative/positive class ratio
+    used by boosted-tree imbalance weights.
+    """
     positive = int(y_train.sum())
     negative = int(len(y_train) - positive)
     if positive == 0:
@@ -32,6 +36,10 @@ def imbalance_ratio(y_train: pd.Series) -> float:
 
 
 def build_models(y_train: pd.Series) -> dict[str, object]:
+    """
+    Construct baseline and candidate classifiers
+    with fixed, reproducible settings.
+    """
     scale_pos_weight = imbalance_ratio(y_train)
     return {
         "majority_baseline": DummyClassifier(strategy="most_frequent"),
@@ -100,6 +108,10 @@ def build_models(y_train: pd.Series) -> dict[str, object]:
 
 
 def build_tuning_specs(y_train: pd.Series) -> dict[str, tuple[object, dict[str, object]]]:
+    """
+    Define estimators and parameter distributions
+    for lightweight randomized tuning.
+    """
     scale_pos_weight = imbalance_ratio(y_train)
     return {
         "random_forest_tuned": (
@@ -170,6 +182,10 @@ def tune_models(
     *,
     n_iter: int = 4,
 ) -> tuple[dict[str, object], pd.DataFrame]:
+    """
+    Tune selected tree models with PR-AUC scoring
+    and return fitted best estimators.
+    """
     cv = StratifiedKFold(n_splits=2, shuffle=True, random_state=RANDOM_STATE)
     tuned_models: dict[str, object] = {}
     rows = []
@@ -200,6 +216,10 @@ def tune_models(
 
 
 def split_data(X: pd.DataFrame, y: pd.Series, metadata: pd.DataFrame):
+    """
+    Create stratified train/validation/test splits
+    while preserving case metadata.
+    """
     X_train, X_temp, y_train, y_temp, meta_train, meta_temp = train_test_split(
         X,
         y,
@@ -220,6 +240,10 @@ def split_data(X: pd.DataFrame, y: pd.Series, metadata: pd.DataFrame):
 
 
 def main() -> None:
+    """
+    Run the full training pipeline and export
+    metrics, thresholds, plots, and model artifact.
+    """
     ensure_output_dirs()
     df = load_neo_data(DATA_PATH)
     X, y, metadata = build_feature_frame(df)

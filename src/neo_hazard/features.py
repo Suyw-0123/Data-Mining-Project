@@ -7,6 +7,10 @@ from neo_hazard.data import safe_log1p
 
 
 def build_feature_frame(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series, pd.DataFrame]:
+    """
+    Create model features, target labels,
+    and metadata kept for case explanations.
+    """
     features = df[BASE_NUMERIC_FEATURES].copy()
 
     features["est_diameter_mean"] = (
