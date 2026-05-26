@@ -3,15 +3,19 @@
 Binary classification of NASA Near-Earth Objects (NEOs) as hazardous or non-hazardous,
 with probability calibration, threshold tuning, and SHAP-based explainability.
 
-## References
+## Documentation
 
 | Document | Link |
 |---|---|
+| **Wiki (EN)** | [docs/wiki/Home\_EN.md](docs/wiki/Home_EN.md) |
+| **Wiki (ZH)** | [docs/wiki/Home\_ZH.md](docs/wiki/Home_ZH.md) |
+| Paper (EN) | [docs/paper/Paper\_EN.md](docs/paper/Paper_EN.md) |
+| Paper (ZH) | [docs/paper/Paper\_ZH.md](docs/paper/Paper_ZH.md) |
+| Proposal (EN) | [docs/project-proposal/Proposal\_Report\_EN.md](docs/project-proposal/Proposal_Report_EN.md) |
+| Proposal (ZH) | [docs/project-proposal/Proposal\_Report\_ZH.md](docs/project-proposal/Proposal_Report_ZH.md) |
+| Plan (EN) | [docs/plan/plan\_EN.md](docs/plan/plan_EN.md) |
+| Plan (ZH) | [docs/plan/plan\_ZH.md](docs/plan/plan_ZH.md) |
 | Dataset (Kaggle) | [NASA Nearest Earth Objects](https://www.kaggle.com/datasets/sameepvani/nasa-nearest-earth-objects) |
-| Proposal (EN) | [project-proposal/Proposal_Report_EN.md](project-proposal/Proposal_Report_EN.md) |
-| Proposal (ZH) | [project-proposal/Proposal_Report_ZH.md](project-proposal/Proposal_Report_ZH.md) |
-| Plan (EN) | [plan/plan_EN.md](plan/plan_EN.md) |
-| Plan (ZH) | [plan/plan_ZH.md](plan/plan_ZH.md) |
 
 ---
 
@@ -80,21 +84,26 @@ Each stage prints a short summary and the paths of files it wrote.
 ```
 .
 ├── data/
-│   └── neo.csv              ← dataset (not tracked by git)
+│   └── neo.csv                  ← dataset (not tracked by git)
+├── docs/
+│   ├── wiki/                    ← technical wiki (EN + ZH)
+│   ├── paper/                   ← final paper (EN + ZH)
+│   ├── plan/                    ← implementation plan (EN + ZH)
+│   └── project-proposal/        ← project proposal (EN + ZH)
 ├── models/
-│   └── final_model.joblib   ← saved artifact (generated, not tracked by git)
+│   └── final_model.joblib       ← saved artifact (generated, not tracked by git)
 ├── reports/
-│   ├── figures/             ← PNG plots
-│   └── tables/              ← CSV / JSON outputs
+│   ├── figures/                 ← PNG plots
+│   └── tables/                  ← CSV / JSON outputs
 ├── src/neo_hazard/
-│   ├── config.py            ← paths and shared constants
-│   ├── data.py              ← data loading and validation
-│   ├── eda.py               ← neo-eda entry point
-│   ├── evaluation.py        ← metrics and threshold selection
-│   ├── explain.py           ← neo-explain entry point
-│   ├── features.py          ← feature engineering
-│   ├── plots.py             ← figure helpers
-│   └── train.py             ← neo-train entry point
+│   ├── config.py                ← paths and shared constants
+│   ├── data.py                  ← data loading and validation
+│   ├── eda.py                   ← neo-eda entry point
+│   ├── evaluation.py            ← metrics and threshold selection
+│   ├── explain.py               ← neo-explain entry point
+│   ├── features.py              ← feature engineering
+│   ├── plots.py                 ← figure helpers
+│   └── train.py                 ← neo-train entry point
 ├── pyproject.toml
 └── uv.lock
 ```
