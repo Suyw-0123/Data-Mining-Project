@@ -20,7 +20,9 @@ def save_target_distribution(df: pd.DataFrame, target: str, path) -> None:
     """
     set_plot_style()
     fig, ax = plt.subplots(figsize=(6, 4))
-    sns.countplot(data=df, x=target, hue=target, palette=["#4C78A8", "#F58518"], ax=ax, legend=False)
+    sns.countplot(
+        data=df, x=target, hue=target, palette=["#4C78A8", "#F58518"], ax=ax, legend=False
+    )
     ax.set_title("Target Distribution")
     ax.set_xlabel("hazardous")
     ax.set_ylabel("Count")

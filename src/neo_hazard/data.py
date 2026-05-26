@@ -92,7 +92,9 @@ def constant_value_table(df: pd.DataFrame) -> pd.DataFrame:
         unique_count = df[column].nunique(dropna=False)
         if unique_count <= 3:
             values = sorted(map(str, df[column].drop_duplicates().tolist()))
-            rows.append({"column": column, "unique_count": unique_count, "values": ", ".join(values)})
+            rows.append(
+                {"column": column, "unique_count": unique_count, "values": ", ".join(values)}
+            )
     return pd.DataFrame(rows)
 
 

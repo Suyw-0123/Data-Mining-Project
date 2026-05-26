@@ -48,7 +48,9 @@ def save_permutation_importance(model, X_test, y_test) -> pd.DataFrame:
     return table
 
 
-def selected_cases(meta_test: pd.DataFrame, y_test: pd.Series, probability: np.ndarray, threshold: float) -> pd.DataFrame:
+def selected_cases(
+    meta_test: pd.DataFrame, y_test: pd.Series, probability: np.ndarray, threshold: float
+) -> pd.DataFrame:
     """
     Pick representative TP/FN/FP cases
     for local model explanation in the report.
@@ -64,14 +66,18 @@ def selected_cases(meta_test: pd.DataFrame, y_test: pd.Series, probability: np.n
     fp = cases[(~cases["true_hazardous"]) & (cases["predicted_hazardous"])]
     tn = cases[(~cases["true_hazardous"]) & (~cases["predicted_hazardous"])]
 
+    def _top1(df, case_type: str):
+        row = df.sort_values("hazard_probability", ascending=False).head(1)
+        return row.assign(case_type=case_type)
+
     if not tp.empty:
-        selections.append(tp.sort_values("hazard_probability", ascending=False).head(1).assign(case_type="true_positive"))
+        selections.append(_top1(tp, "true_positive"))
     if not fn.empty:
-        selections.append(fn.sort_values("hazard_probability", ascending=False).head(1).assign(case_type="false_negative"))
+        selections.append(_top1(fn, "false_negative"))
     if not fp.empty:
-        selections.append(fp.sort_values("hazard_probability", ascending=False).head(1).assign(case_type="false_positive"))
+        selections.append(_top1(fp, "false_positive"))
     elif not tn.empty:
-        selections.append(tn.sort_values("hazard_probability", ascending=False).head(1).assign(case_type="high_score_true_negative"))
+        selections.append(_top1(tn, "high_score_true_negative"))
 
     selected = pd.concat(selections, ignore_index=True)
     selected["threshold"] = threshold
@@ -79,7 +85,9 @@ def selected_cases(meta_test: pd.DataFrame, y_test: pd.Series, probability: np.n
     return selected
 
 
-def run_shap_explanations(model, X_train: pd.DataFrame, X_test: pd.DataFrame, selected: pd.DataFrame) -> str:
+def run_shap_explanations(
+    model, X_train: pd.DataFrame, X_test: pd.DataFrame, selected: pd.DataFrame
+) -> str:
     """
     Generate global SHAP plots and
     top local SHAP contributions for selected cases.
@@ -129,7 +137,9 @@ def run_shap_explanations(model, X_train: pd.DataFrame, X_test: pd.DataFrame, se
                     "feature": feature,
                     "feature_value": float(local_X.iloc[row_position, feature_index]),
                     "shap_value": float(values[feature_index]),
-                    "direction": "pushes_probability_up" if values[feature_index] > 0 else "pushes_probability_down",
+                    "direction": "pushes_probability_up"
+                    if values[feature_index] > 0
+                    else "pushes_probability_down",
                 }
             )
 

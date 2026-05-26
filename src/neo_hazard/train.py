@@ -5,6 +5,8 @@ import json
 import joblib
 import numpy as np
 import pandas as pd
+from lightgbm import LGBMClassifier
+from scipy.stats import randint, uniform
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
@@ -12,13 +14,23 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from scipy.stats import randint, uniform
-from lightgbm import LGBMClassifier
 from xgboost import XGBClassifier
 
-from neo_hazard.config import DATA_PATH, FIGURES_DIR, MODELS_DIR, RANDOM_STATE, TABLES_DIR, ensure_output_dirs
+from neo_hazard.config import (
+    DATA_PATH,
+    FIGURES_DIR,
+    MODELS_DIR,
+    RANDOM_STATE,
+    TABLES_DIR,
+    ensure_output_dirs,
+)
 from neo_hazard.data import load_neo_data
-from neo_hazard.evaluation import choose_threshold, metric_row, probabilities_or_scores, threshold_table
+from neo_hazard.evaluation import (
+    choose_threshold,
+    metric_row,
+    probabilities_or_scores,
+    threshold_table,
+)
 from neo_hazard.features import build_feature_frame
 from neo_hazard.plots import save_calibration_curve, save_precision_recall_curve, save_roc_curve
 
@@ -294,7 +306,9 @@ def main() -> None:
     calibrated_val_probability = probabilities_or_scores(calibrated_model, X_val)
     calibrated_thresholds = threshold_table(y_val, calibrated_val_probability)
     calibrated_threshold = choose_threshold(calibrated_thresholds)
-    calibrated_thresholds.to_csv(TABLES_DIR / "threshold_tuning_validation_calibrated.csv", index=False)
+    calibrated_thresholds.to_csv(
+        TABLES_DIR / "threshold_tuning_validation_calibrated.csv", index=False
+    )
 
     y_test_probability_raw = probabilities_or_scores(best_model, X_test)
     y_test_probability_calibrated = probabilities_or_scores(calibrated_model, X_test)

@@ -2,7 +2,14 @@ from __future__ import annotations
 
 import json
 
-from neo_hazard.config import BASE_NUMERIC_FEATURES, DATA_PATH, FIGURES_DIR, TABLES_DIR, TARGET, ensure_output_dirs
+from neo_hazard.config import (
+    BASE_NUMERIC_FEATURES,
+    DATA_PATH,
+    FIGURES_DIR,
+    TABLES_DIR,
+    TARGET,
+    ensure_output_dirs,
+)
 from neo_hazard.data import (
     class_distribution,
     constant_value_table,

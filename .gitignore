@@ -1,6 +1,7 @@
 .venv
 /.agent
 /.codex
+/.claude
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
