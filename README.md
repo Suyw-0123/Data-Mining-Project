@@ -34,6 +34,7 @@ UV_CACHE_DIR=/tmp/uv-cache MPLCONFIGDIR=/tmp/mpl-cache uv run neo-explain
 Main outputs:
 
 - `reports/tables/model_metrics_validation.csv`
+- `reports/tables/hyperparameter_tuning_results.csv`
 - `reports/tables/final_test_metrics.csv`
 - `reports/tables/threshold_tuning_validation_calibrated.csv`
 - `reports/tables/permutation_importance.csv`

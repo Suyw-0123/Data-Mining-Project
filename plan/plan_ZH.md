@@ -240,10 +240,33 @@ Baseline 用於確認任務難度與後續模型提升是否有意義。
    - 可和 SHAP 解釋搭配
 
 3. XGBoost 或 LightGBM
-   - 若環境與時間允許，可加入比較
-   - 若安裝或環境限制較高，則以 scikit-learn 模型為主，避免工具成本過高
+   - 已納入主要模型比較
+   - 使用 `scale_pos_weight` 對應類別不平衡
+   - 適合作為表格資料上的強基線，並與 Random Forest、HistGradientBoosting 比較
 
-### 7.3 不平衡處理方法
+### 7.3 Hyperparameter Tuning
+
+實作階段會對主要樹模型進行輕量化 `RandomizedSearchCV` 調參，避免完整 grid search 的計算成本過高。
+
+調參設定：
+
+- Cross-validation：stratified 2-fold
+- Search method：RandomizedSearchCV
+- Scoring：`average_precision`（PR-AUC）
+- 每個模型候選組數：4
+- 調參模型：
+  - Random Forest
+  - HistGradientBoosting
+  - XGBoost
+  - LightGBM
+
+調參結果會輸出至：
+
+```text
+reports/tables/hyperparameter_tuning_results.csv
+```
+
+### 7.4 不平衡處理方法
 
 預計比較：
 
@@ -420,7 +443,22 @@ Default 0.5 threshold
 - Random Forest
 - Random Forest with class weight
 - HistGradientBoosting / Gradient Boosting
-- XGBoost 或 LightGBM（視環境允許）
+- XGBoost
+- LightGBM
+- Tuned Random Forest / HistGradientBoosting / XGBoost / LightGBM
+
+### 10.3.1 實驗 C-2：Hyperparameter Tuning
+
+目的：
+
+- 比較預設參數與快速調參後的模型表現。
+- 使用 PR-AUC 作為調參目標，使搜尋更符合不平衡資料情境。
+
+輸出：
+
+- `hyperparameter_tuning_results.csv`
+- tuned model validation 指標
+- 最終模型是否由 tuned model 取代的判斷依據
 
 ### 10.4 實驗 D：Threshold Tuning
 
@@ -553,7 +591,8 @@ Data-Mining-Projects/
 - `shap`
 - `jupyter`
 - `imbalanced-learn`（若進行 undersampling 或 SMOTE 實驗）
-- `xgboost` 或 `lightgbm`（視環境與時間允許）
+- `xgboost`
+- `lightgbm`
 
 ---
 

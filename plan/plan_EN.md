@@ -240,10 +240,33 @@ Baselines are used to understand task difficulty and verify whether later models
    - Can be paired with SHAP explanations
 
 3. XGBoost or LightGBM
-   - Can be added if the environment and schedule allow
-   - If installation or environment cost is too high, the project should prioritize scikit-learn models
+   - Included in the main model comparison
+   - Uses `scale_pos_weight` to address class imbalance
+   - Serves as a strong tabular-data baseline against Random Forest and HistGradientBoosting
 
-### 7.3 Imbalance Handling
+### 7.3 Hyperparameter Tuning
+
+The implementation performs lightweight `RandomizedSearchCV` tuning for the main tree-based models. This avoids the high computational cost of exhaustive grid search.
+
+Tuning setup:
+
+- Cross-validation: stratified 2-fold
+- Search method: RandomizedSearchCV
+- Scoring: `average_precision` (PR-AUC)
+- Candidate settings per model: 4
+- Tuned models:
+  - Random Forest
+  - HistGradientBoosting
+  - XGBoost
+  - LightGBM
+
+Tuning results are exported to:
+
+```text
+reports/tables/hyperparameter_tuning_results.csv
+```
+
+### 7.4 Imbalance Handling
 
 Planned comparison:
 
@@ -420,7 +443,22 @@ Candidate models:
 - Random Forest
 - Random Forest with class weight
 - HistGradientBoosting / Gradient Boosting
-- XGBoost or LightGBM, if the environment allows
+- XGBoost
+- LightGBM
+- Tuned Random Forest / HistGradientBoosting / XGBoost / LightGBM
+
+### 10.3.1 Experiment C-2: Hyperparameter Tuning
+
+Purpose:
+
+- Compare default model settings with lightweight tuned variants.
+- Use PR-AUC as the tuning objective so the search is aligned with imbalanced classification.
+
+Outputs:
+
+- `hyperparameter_tuning_results.csv`
+- validation metrics for tuned models
+- decision evidence for whether a tuned model replaces the final model
 
 ### 10.4 Experiment D: Threshold Tuning
 
@@ -553,7 +591,8 @@ Expected core dependencies include:
 - `shap`
 - `jupyter`
 - `imbalanced-learn` if undersampling or SMOTE experiments are included
-- `xgboost` or `lightgbm` if the environment and schedule allow
+- `xgboost`
+- `lightgbm`
 
 ---
 

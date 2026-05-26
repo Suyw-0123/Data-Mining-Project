@@ -1,0 +1,5 @@
+model,best_cv_pr_auc,best_params
+random_forest_tuned,0.5233060089270902,"{""max_depth"": 14, ""max_features"": ""sqrt"", ""min_samples_leaf"": 5, ""n_estimators"": 182}"
+hist_gradient_boosting_tuned,0.5208020059069698,"{""l2_regularization"": 0.05005629167085327, ""learning_rate"": 0.04714401815063289, ""max_iter"": 250, ""max_leaf_nodes"": 36, ""min_samples_leaf"": 11}"
+xgboost_tuned,0.5275779907623872,"{""colsample_bytree"": 0.7645209030420499, ""learning_rate"": 0.13394113749299222, ""max_depth"": 5, ""min_child_weight"": 3, ""n_estimators"": 269, ""reg_lambda"": 0.6128231580542005, ""subsample"": 0.9304996930667062}"
+lightgbm_tuned,0.5284463643314907,"{""colsample_bytree"": 0.808192835107576, ""learning_rate"": 0.040872772143938495, ""min_child_samples"": 71, ""n_estimators"": 170, ""num_leaves"": 69, ""reg_lambda"": 2.4664617716135764, ""subsample"": 0.8666907233119949}"

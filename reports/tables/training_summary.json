@@ -7,5 +7,6 @@
   "validation_rows": 13625,
   "test_rows": 13626,
   "validation_metrics_file": "/home/suyw/dmhw/Data-Mining-Projects/reports/tables/model_metrics_validation.csv",
-  "test_metrics_file": "/home/suyw/dmhw/Data-Mining-Projects/reports/tables/final_test_metrics.csv"
+  "test_metrics_file": "/home/suyw/dmhw/Data-Mining-Projects/reports/tables/final_test_metrics.csv",
+  "hyperparameter_tuning_file": "/home/suyw/dmhw/Data-Mining-Projects/reports/tables/hyperparameter_tuning_results.csv"
 }

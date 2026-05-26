@@ -1,4 +1,4 @@
 source_index,id,name,orbiting_body,sentry_object,true_hazardous,hazard_probability,predicted_hazardous,case_type,threshold
 47556,3774091,(2017 HP3),Earth,False,True,0.8956694099130108,True,true_positive,0.19
-724,3713941,(2015 EO61),Earth,False,True,0.18968232036842636,False,false_negative,0.19
+724,3713941,(2015 EO61),Earth,False,True,0.18968232036842628,False,false_negative,0.19
 34800,3566975,(2011 KO17),Earth,False,False,0.8954409610716333,True,false_positive,0.19
