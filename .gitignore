@@ -1,5 +1,5 @@
 .venv
-/.agent
+/.agents
 /.codex
 /.claude
 __pycache__/
