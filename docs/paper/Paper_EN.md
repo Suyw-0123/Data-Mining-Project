@@ -2,7 +2,7 @@
 
 ## Abstract
 
-Near-Earth Objects (NEOs) regularly approach Earth, and a small subset may be labeled as potentially hazardous due to their size, velocity, and close-approach characteristics. Manually reviewing every observed object can be costly, so a data-driven screening model can help experts prioritize objects that deserve earlier inspection. This study uses the NASA Nearest Earth Objects dataset to build an explainable binary classification pipeline for predicting whether a NEO is labeled as `hazardous`. The task remains binary classification, but the model also outputs the estimated probability of `hazardous=True`, which is treated as a risk score for prioritization. We compare Majority Baseline, Logistic Regression, class-weighted Logistic Regression, Random Forest, HistGradientBoosting, XGBoost, and LightGBM models, and we apply lightweight hyperparameter tuning to the main tree-based models. The best validation model is `random_forest_balanced`. After sigmoid calibration and validation-based threshold tuning, the final calibrated model achieves F1 = 0.5332, recall = 0.7474, precision = 0.4145, PR-AUC = 0.5595, and ROC-AUC = 0.9269 on the test set using threshold = 0.19. Explainability analysis using permutation importance and SHAP shows that `miss_distance`, `absolute_magnitude`, and diameter-related features are the most influential factors. The final system provides both global and local explanations, supporting expert review rather than replacing domain judgment.
+Near-Earth Objects (NEOs) regularly approach Earth, and a small subset may be labeled as potentially hazardous due to their size, velocity, and close-approach characteristics. Manually reviewing every observed object can be costly, so a data-driven screening model can help experts prioritize objects that deserve earlier inspection. This study uses the NASA Nearest Earth Objects dataset to build an explainable binary classification pipeline for predicting whether a NEO is labeled as `hazardous`. The task remains binary classification, but the model also outputs the estimated probability of `hazardous=True`, which is treated as a risk score for prioritization. We compare Majority Baseline, Logistic Regression, class-weighted Logistic Regression, Random Forest, HistGradientBoosting, XGBoost, and LightGBM models, and we apply lightweight hyperparameter tuning to the main tree-based models. The best validation model is `random_forest_balanced`. After sigmoid calibration and validation-based threshold tuning, the final calibrated model achieves F1 = 0.5332, recall = 0.7474, precision = 0.4145, PR-AUC = 0.5595, and ROC-AUC = 0.9269 on the test set using threshold = 0.19. We further conduct a five-variation ablation study which shows that threshold tuning, class balancing, and log features each contribute to recall, while calibration trades recall for probability quality necessary for risk scoring. Explainability analysis using permutation importance and SHAP shows that `miss_distance`, `absolute_magnitude`, and diameter-related features are the most influential factors. The final system provides both global and local explanations, supporting expert review rather than replacing domain judgment.
 
 **Keywords:** Near-Earth Objects, binary classification, class imbalance, risk scoring, probability calibration, SHAP, explainable AI
 
@@ -21,6 +21,7 @@ The contributions of this work are:
 3. Validation-based threshold tuning for a risk-screening decision setting.
 4. Calibration and explainability analysis using calibration curves, Brier score, permutation importance, and SHAP.
 5. Global feature importance and local case explanations for report and presentation use.
+6. A five-variation ablation study quantifying the contribution of each major design decision (calibration, threshold tuning, class balancing, log features) to recall and probability quality.
 
 ## 2. Dataset and Problem Definition
 
@@ -251,7 +252,7 @@ Removing calibration (V1) gives the highest recall, 0.8198, but also produces th
 
 Removing class balancing (V3) lowers recall from 0.7474 to 0.5958, with 201 additional missed hazardous objects. Precision and accuracy both rise, but this is exactly the type of trade-off the screening objective does not favor. Removing log features (V4) presents a more nuanced result: PR-AUC, ROC-AUC, and F1 are all slightly higher than V0, but recall drops from 0.7474 to 0.6244, missing 163 additional hazardous objects. The log transformations reduce skewness in size and distance distributions, which appears to stabilize the decision boundary at low probability values where borderline hazardous objects accumulate. For ranking-style metrics the log features do not contribute, but for the recall objective that this study targets they remain beneficial.
 
-Across all four ablated components, no single removal preserves the recall of the full model. The largest effect comes from threshold tuning, followed by class balancing, log features, and calibration in decreasing order of recall impact. This pattern supports the design choice of the final calibrated Balanced Random Forest with a validation-tuned threshold as the recommended deployment configuration for risk screening.
+Among the four ablated components, three (V2, V3, V4) produce lower test-set recall than the full model. V1 is the only ablation that achieves higher recall than V0 (0.8198 versus 0.7474), but it does so at the cost of probability quality: the Brier score deteriorates from 0.0600 to 0.0673, undermining the system's role as a risk score. Ranking by absolute impact on recall, the components are ordered as threshold tuning (Δ = 0.449), class balancing (Δ = 0.152), log features (Δ = 0.123), and calibration (Δ = 0.072). Threshold tuning therefore exerts the dominant influence, while calibration's contribution is best understood through probability quality rather than recall. This combined evidence supports the final design: a calibrated Balanced Random Forest with a validation-tuned threshold provides the best recall-versus-probability-quality balance for the risk-screening objective.
 
 ## 5. Explainability Analysis
 
@@ -301,7 +302,7 @@ SHAP shows that `log_miss_distance`, `miss_distance`, `est_diameter_min`, `absol
 - Threshold: 0.19
 - Predicted label: non-hazardous
 
-This case is very close to the decision threshold. SHAP shows that size-related features push the probability upward, while `log_miss_distance` pushes it downward. This type of boundary case is important in practice because a small threshold change can alter the final decision.
+This case is very close to the decision threshold — the predicted probability of 0.1897 is only 0.0003 below the threshold of 0.19. SHAP shows that four size-related features (`est_diameter_min`, `log_est_diameter_mean`, `est_diameter_range`, `est_diameter_mean`) push the probability upward, while `log_miss_distance` pushes it downward; the model arbitrates this conflict conservatively. This type of boundary case is important in practice because a small threshold change can alter the final decision, and the V2 ablation result demonstrates the same sensitivity at the system level.
 
 #### Case 3: False Positive
 
@@ -340,7 +341,7 @@ This study has several limitations:
 
 ## 8. Conclusion
 
-This study builds a reproducible and explainable binary classification pipeline for NEO hazardous-label prediction. The results show that accuracy is not suitable as the main metric under strong class imbalance. PR-AUC, F1, recall, and confusion matrix analysis provide a better view of whether the model is useful for risk screening. Balanced Random Forest performs best on the validation set. After sigmoid calibration and threshold tuning, the final model achieves F1 = 0.5332, recall = 0.7474, and precision = 0.4145 on the test set. Explainability analysis shows that close-approach distance, magnitude, and diameter-related features are the main drivers of the model's predictions.
+This study builds a reproducible and explainable binary classification pipeline for NEO hazardous-label prediction. The results show that accuracy is not suitable as the main metric under strong class imbalance. PR-AUC, F1, recall, and confusion matrix analysis provide a better view of whether the model is useful for risk screening. Balanced Random Forest performs best on the validation set. After sigmoid calibration and threshold tuning, the final model achieves F1 = 0.5332, recall = 0.7474, and precision = 0.4145 on the test set. The five-variation ablation study confirms that threshold tuning is the single largest design lever (ΔRecall = 0.449 when removed), followed by class balancing and log features, while calibration trades a small amount of recall for substantially improved probability quality. Explainability analysis shows that close-approach distance, magnitude, and diameter-related features are the main drivers of the model's predictions.
 
 Overall, the best positioning of this project is an explainable probability-based binary classification system. It estimates the probability that a NEO is labeled as hazardous and uses that risk score to support expert prioritization. Future work should add richer orbital data and a formal review-cost function to make the model closer to real planetary defense decision support.
 
@@ -349,5 +350,9 @@ Overall, the best positioning of this project is an explainable probability-base
 1. Sameep Vani. NASA Nearest Earth Objects. Kaggle Dataset. <https://www.kaggle.com/datasets/sameepvani/nasa-nearest-earth-objects>
 2. NASA Open APIs. <https://api.nasa.gov/>
 3. NASA Jet Propulsion Laboratory, Center for Near Earth Object Studies. Close-Approach Data. <https://cneos.jpl.nasa.gov/ca/>
-4. Lundberg, S. M., & Lee, S. I. (2017). A Unified Approach to Interpreting Model Predictions. Advances in Neural Information Processing Systems.
+4. Lundberg, S. M., & Lee, S. I. (2017). A Unified Approach to Interpreting Model Predictions. Advances in Neural Information Processing Systems, 30, 4765-4774.
 5. Pedregosa, F., et al. (2011). Scikit-learn: Machine Learning in Python. Journal of Machine Learning Research, 12, 2825-2830.
+6. Breiman, L. (2001). Random Forests. Machine Learning, 45(1), 5-32.
+7. Chen, T., & Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, 785-794.
+8. Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., & Liu, T. Y. (2017). LightGBM: A Highly Efficient Gradient Boosting Decision Tree. Advances in Neural Information Processing Systems, 30, 3146-3154.
+9. Platt, J. (1999). Probabilistic Outputs for Support Vector Machines and Comparisons to Regularized Likelihood Methods. Advances in Large Margin Classifiers, 10(3), 61-74.
