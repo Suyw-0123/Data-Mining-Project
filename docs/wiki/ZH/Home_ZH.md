@@ -13,6 +13,7 @@
 | [模型與實驗](Models_ZH.md) | 所有模型、超參數調整、比較 |
 | [評估與結果](Evaluation_ZH.md) | 指標、閾值調整、校準、最終測試結果 |
 | [可解釋性](Explainability_ZH.md) | Permutation importance、SHAP 全域與局部分析 |
+| [消融研究](Ablation_ZH.md) | 5 種 variation 比較，驗證每個設計決策的效果 |
 | [程式碼參考](Code_ZH.md) | 逐模組原始碼說明 |
 
 ## English Version

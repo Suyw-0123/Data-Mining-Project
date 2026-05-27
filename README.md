@@ -84,7 +84,7 @@ Each stage prints a short summary and the paths of files it wrote.
 ```
 .
 ├── data/
-│   └── neo.csv                  ← dataset (not tracked by git)
+│   └── neo.csv                  ← dataset (included in repo)
 ├── docs/
 │   ├── wiki/                    ← technical wiki (EN + ZH)
 │   ├── paper/                   ← final paper (EN + ZH)

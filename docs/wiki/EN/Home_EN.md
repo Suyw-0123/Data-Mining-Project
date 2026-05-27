@@ -13,6 +13,7 @@ Use the table below to navigate to the topic you need.
 | [Models & Experiments](Models_EN.md) | All models, hyperparameter tuning, comparison |
 | [Evaluation & Results](Evaluation_EN.md) | Metrics, threshold tuning, calibration, final test results |
 | [Explainability](Explainability_EN.md) | Permutation importance, SHAP global and local analysis |
+| [Ablation Study](Ablation_EN.md) | 5-variation comparison proving each design decision |
 | [Code Reference](Code_EN.md) | Module-by-module source code guide |
 
 ## Chinese Version

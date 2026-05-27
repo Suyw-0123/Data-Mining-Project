@@ -47,7 +47,7 @@ The target distribution is:
 
 This distribution shows clear class imbalance. A model that always predicts `False` can still achieve about 90.27% accuracy, but it has zero recall for hazardous objects. Therefore, this study does not use accuracy as the main model selection metric. Instead, it focuses on recall, precision, F1, PR-AUC, and ROC-AUC.
 
-![Target distribution](../reports/figures/target_distribution.png)
+![Target distribution](../../reports/figures/target_distribution.png)
 
 ### 2.3 Numeric Feature Observations
 
@@ -63,7 +63,7 @@ The main numeric feature summary is:
 
 Pearson correlation shows that `absolute_magnitude` has a correlation of -0.3653 with `hazardous`, indicating that lower absolute magnitude is associated with a higher probability of being labeled hazardous. `relative_velocity` has a positive correlation of 0.1912 with the target. `miss_distance` has only weak linear correlation with the target, at 0.0423. However, later model importance results suggest that `miss_distance` can still be important in a nonlinear model.
 
-![Correlation heatmap](../reports/figures/correlation_heatmap.png)
+![Correlation heatmap](../../reports/figures/correlation_heatmap.png)
 
 ### 2.4 Task Definition
 
@@ -150,7 +150,7 @@ Each model first outputs the probability of `hazardous=True`. A threshold is the
 
 The best model is also calibrated using sigmoid calibration. Calibration is not intended to maximize all classification metrics. Its purpose is to make the probability output more suitable as a risk score. The probability quality is evaluated using calibration curve and Brier score.
 
-![Calibration curve](../reports/figures/final_calibration_curve.png)
+![Calibration curve](../../reports/figures/final_calibration_curve.png)
 
 ### 3.5 Explainability Methods
 
@@ -208,9 +208,9 @@ The final test results compare three settings:
 
 The calibrated model with threshold = 0.19 achieves the best F1 score, 0.5332, with recall = 0.7474. The default threshold of 0.5 has higher accuracy and precision, but its recall drops to 0.2986. This supports the main design choice of the project: threshold tuning is necessary when the goal is risk screening under class imbalance.
 
-![Precision-recall curve](../reports/figures/final_precision_recall_curve.png)
+![Precision-recall curve](../../reports/figures/final_precision_recall_curve.png)
 
-![ROC curve](../reports/figures/final_roc_curve.png)
+![ROC curve](../../reports/figures/final_roc_curve.png)
 
 ### 4.3 Confusion Matrix Interpretation
 
@@ -222,6 +222,36 @@ For the calibrated Random Forest at threshold = 0.19, the test confusion matrix 
 | True True | 335 | 991 |
 
 This setting recovers 991 hazardous objects and misses 335 hazardous objects. Compared with threshold = 0.5, the number of true positives increases from 396 to 991, but false positives also increase from 270 to 1,400. This is a typical trade-off in screening systems: reducing missed hazardous objects requires accepting more candidates for expert review.
+
+### 4.4 Ablation Study
+
+To verify that each design choice in the final model contributes to the screening objective, this study performs an ablation analysis that systematically removes one component at a time and re-evaluates on the test set. Because the task prioritizes minimizing missed hazardous objects, the analysis treats recall, F1, and PR-AUC as the primary axes; accuracy is reported for completeness but does not drive the comparison.
+
+Five configurations are compared:
+
+| Version | Setting | Change from full model |
+|---|---|---|
+| V0 | Full Model | Balanced Random Forest + sigmoid calibration + validation-tuned threshold (0.19) |
+| V1 | w/o Calibration | Raw Balanced Random Forest with threshold tuned on raw scores (0.34) |
+| V2 | w/o Threshold Tuning | Calibrated model evaluated at the default threshold of 0.5 |
+| V3 | w/o Class Balancing | Random Forest without `class_weight="balanced_subsample"`, otherwise identical to V0 (threshold 0.24) |
+| V4 | w/o Log Features | Model trained on the seven non-log features only, otherwise identical to V0 (threshold 0.29) |
+
+The corresponding test-set metrics are:
+
+| Version | Threshold | Accuracy | Precision | Recall | F1 | PR-AUC | ROC-AUC |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| V0 Full Model | 0.19 | 0.8727 | 0.4145 | 0.7474 | 0.5332 | 0.5595 | 0.9269 |
+| V1 w/o Calibration | 0.34 | 0.8544 | 0.3838 | 0.8198 | 0.5228 | 0.5634 | 0.9267 |
+| V2 w/o Threshold Tuning | 0.50 | 0.9119 | 0.5946 | 0.2986 | 0.3976 | 0.5595 | 0.9269 |
+| V3 w/o Class Balancing | 0.24 | 0.8929 | 0.4609 | 0.5958 | 0.5197 | 0.5715 | 0.9277 |
+| V4 w/o Log Features | 0.29 | 0.8954 | 0.4718 | 0.6244 | 0.5375 | 0.5880 | 0.9324 |
+
+Removing calibration (V1) gives the highest recall, 0.8198, but also produces the largest false-positive count among all configurations. Calibration trades a small amount of recall for improved probability quality, which lowers the Brier score from 0.0673 to 0.0600 and makes the output more suitable as a continuous risk score. Removing threshold tuning (V2) has the most dramatic effect: recall collapses to 0.2986 and 930 hazardous objects are missed, while accuracy rises to 0.9119. This confirms that the default threshold of 0.5 is inappropriate for an imbalanced screening task and that accuracy alone would mask a substantial degradation in screening utility.
+
+Removing class balancing (V3) lowers recall from 0.7474 to 0.5958, with 201 additional missed hazardous objects. Precision and accuracy both rise, but this is exactly the type of trade-off the screening objective does not favor. Removing log features (V4) presents a more nuanced result: PR-AUC, ROC-AUC, and F1 are all slightly higher than V0, but recall drops from 0.7474 to 0.6244, missing 163 additional hazardous objects. The log transformations reduce skewness in size and distance distributions, which appears to stabilize the decision boundary at low probability values where borderline hazardous objects accumulate. For ranking-style metrics the log features do not contribute, but for the recall objective that this study targets they remain beneficial.
+
+Across all four ablated components, no single removal preserves the recall of the full model. The largest effect comes from threshold tuning, followed by class balancing, log features, and calibration in decreasing order of recall impact. This pattern supports the design choice of the final calibrated Balanced Random Forest with a validation-tuned threshold as the recommended deployment configuration for risk screening.
 
 ## 5. Explainability Analysis
 
@@ -239,13 +269,13 @@ The top five permutation importance results are:
 
 The model relies strongly on close-approach distance, magnitude, and diameter-related features. Although `miss_distance` has weak linear correlation with the target, it becomes highly important in the nonlinear Random Forest model. This suggests that simple linear correlation is not sufficient to describe all useful predictive signals in this dataset.
 
-![Permutation importance](../reports/figures/permutation_importance.png)
+![Permutation importance](../../reports/figures/permutation_importance.png)
 
 The SHAP global plots show a similar pattern: distance, magnitude, and size-related features dominate the model's hazardous probability output.
 
-![SHAP global bar](../reports/figures/shap_global_bar.png)
+![SHAP global bar](../../reports/figures/shap_global_bar.png)
 
-![SHAP summary beeswarm](../reports/figures/shap_summary_beeswarm.png)
+![SHAP summary beeswarm](../../reports/figures/shap_summary_beeswarm.png)
 
 ### 5.2 Local Case Studies
 
