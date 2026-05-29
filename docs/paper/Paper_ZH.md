@@ -62,7 +62,11 @@
 | `miss_distance` | 6745.53 | 17210820.24 | 37846579.26 | 56548996.45 | 74798651.45 | 37066546.03 |
 | `absolute_magnitude` | 9.23 | 21.34 | 23.70 | 25.70 | 33.20 | 23.53 |
 
-Pearson correlation 顯示，`absolute_magnitude` 與 `hazardous` 的相關係數為 -0.3653，代表絕對星等較低的物體較可能被標記為危險；`relative_velocity` 與 `hazardous` 的相關係數為 0.1912，表示速度也具有一定風險訊號；`miss_distance` 與目標的線性相關較弱，為 0.0423。然而後續模型重要度顯示，`miss_distance` 仍可能透過非線性或 threshold-like 關係影響模型判斷。
+尺寸與距離特徵的平均值遠大於中位數（例如 `est_diameter_min` 平均為 0.1274，中位數僅 0.0484，最大值達 37.89），顯示資料呈現嚴重右偏、並帶有大型物體的長尾。下方的分布圖可清楚看出此偏態，也直接說明 §3.2 對尺寸、速度與距離特徵採用 `log1p` 轉換的動機。
+
+![Numeric feature distributions](../../reports/figures/numeric_distributions.png)
+
+Pearson correlation 顯示，`absolute_magnitude` 與 `hazardous` 的相關係數為 -0.3653，代表絕對星等較低的物體較可能被標記為危險；`relative_velocity` 與 `hazardous` 的相關係數為 0.1912，表示速度也具有一定風險訊號；`miss_distance` 與目標的線性相關較弱，為 0.0423。然而後續模型重要度顯示，`miss_distance` 仍可能透過非線性或 threshold-like 關係影響模型判斷。熱力圖另顯示 `est_diameter_min` 與 `est_diameter_max` 完全相關（r = 1.0），因為兩者皆由 `absolute_magnitude` 在固定反照率假設下推導而來；此冗餘正是將兩者合併為 §3.2 所述 `est_diameter_mean` 與 `est_diameter_range` 工程特徵的直接動機。
 
 ![Correlation heatmap](../../reports/figures/correlation_heatmap.png)
 

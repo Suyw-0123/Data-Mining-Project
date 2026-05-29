@@ -62,7 +62,11 @@ The main numeric feature summary is:
 | `miss_distance` | 6745.53 | 17210820.24 | 37846579.26 | 56548996.45 | 74798651.45 | 37066546.03 |
 | `absolute_magnitude` | 9.23 | 21.34 | 23.70 | 25.70 | 33.20 | 23.53 |
 
-Pearson correlation shows that `absolute_magnitude` has a correlation of -0.3653 with `hazardous`, indicating that lower absolute magnitude is associated with a higher probability of being labeled hazardous. `relative_velocity` has a positive correlation of 0.1912 with the target. `miss_distance` has only weak linear correlation with the target, at 0.0423. However, later model importance results suggest that `miss_distance` can still be important in a nonlinear model.
+For the size and distance features, the mean is far larger than the median (for example, `est_diameter_min` has mean 0.1274 versus median 0.0484, with a maximum of 37.89), which indicates a heavy right-skew with a long tail of large objects. The distribution plots below make this skew visible and directly motivate the `log1p` transforms applied to size, velocity, and distance in Section 3.2.
+
+![Numeric feature distributions](../../reports/figures/numeric_distributions.png)
+
+Pearson correlation shows that `absolute_magnitude` has a correlation of -0.3653 with `hazardous`, indicating that lower absolute magnitude is associated with a higher probability of being labeled hazardous. `relative_velocity` has a positive correlation of 0.1912 with the target. `miss_distance` has only weak linear correlation with the target, at 0.0423. However, later model importance results suggest that `miss_distance` can still be important in a nonlinear model. The heatmap also shows that `est_diameter_min` and `est_diameter_max` are perfectly correlated (r = 1.0), because both are derived from `absolute_magnitude` under a fixed albedo assumption. This redundancy is the direct motivation for collapsing them into the engineered `est_diameter_mean` and `est_diameter_range` features described in Section 3.2.
 
 ![Correlation heatmap](../../reports/figures/correlation_heatmap.png)
 
