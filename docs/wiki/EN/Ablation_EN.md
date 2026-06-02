@@ -20,9 +20,21 @@ Therefore, **Recall is the primary evaluation axis**, with F1 and PR-AUC as seco
 | **V3** | w/o Class Balancing | RF without `class_weight="balanced_subsample"`, calibrated, tuned threshold (0.24) |
 | **V4** | w/o Log Features | Removes `log_est_diameter_mean`, `log_relative_velocity`, `log_miss_distance`; calibrated, tuned threshold (0.29) |
 
-V0 / V1 / V2 were already produced by the standard `neo-train` pipeline.
-V3 and V4 were run as additional experiments and their results are stored in
-`reports/tables/ablation_study_summary.csv`.
+V0 / V1 / V2 are produced directly by the standard `neo-train` pipeline — the pipeline
+already evaluates the calibrated model at the tuned threshold (V0), the raw uncalibrated
+model (V1), and the calibrated model at the default 0.5 threshold (V2).
+
+> **Note on V3 / V4 :**
+> These two variations are **not produced by any committed script.**
+> They were obtained by **temporarily editing the internals of `train.py` and re-running**
+> as a one-off experiment to extend the ablation: V3 removed
+> `class_weight="balanced_subsample"`, and V4 dropped the three log-transformed features
+> from the feature set, with everything else (data split, calibration method, threshold-tuning
+> procedure) identical to V0. Those temporary edits were not kept in the codebase, so there is
+> **no V3 / V4 entry point visible in the current implementation** — this is expected, not a
+> missing piece. The numbers in `reports/tables/ablation_study_summary.csv` are the single
+> canonical record. To reproduce them, apply the two changes above to `train.py` manually and
+> re-run.
 
 ## 3. Results
 

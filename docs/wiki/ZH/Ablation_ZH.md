@@ -20,9 +20,19 @@
 | **V3** | w/o Class Balancing | RF 不使用 `class_weight="balanced_subsample"`，已校準，調整閾值（0.24） |
 | **V4** | w/o Log Features | 移除 `log_est_diameter_mean`、`log_relative_velocity`、`log_miss_distance`；已校準，調整閾值（0.29） |
 
-V0 / V1 / V2 已由標準 `neo-train` 流程產生。
-V3 與 V4 為額外補跑的實驗，結果儲存於
-`reports/tables/ablation_study_summary.csv`。
+V0 / V1 / V2 可由標準 `neo-train` 流程直接產生——該流程本身就會輸出
+校準模型在調整閾值下的評估（V0）、未校準原始模型的評估（V1），
+以及校準模型在預設閾值 0.5 下的評估（V2）。
+
+> **關於 V3 / V4 的說明：**
+> 這兩個版本**並非由任何已提交的腳本自動產生**。
+> 它們是當時為了補充消融分析，**直接在 `train.py` 內部臨時修改程式碼後重新執行**所得：
+> V3 移除 `class_weight="balanced_subsample"`，V4 在特徵集中移除三個 log 轉換特徵，
+> 其餘設定（資料切分、校準方式、閾值調整流程）與 V0 完全相同。
+> 這些臨時修改屬於一次性實驗，並未保留在程式碼庫中，
+> 因此在現有實作中**看不到對應的 V3 / V4 進入點**，這是預期內的情況、並非缺漏。
+> 最終數據以 `reports/tables/ablation_study_summary.csv` 為唯一正式紀錄；
+> 若需重現，請依上述兩點手動調整 `train.py` 後重新執行。
 
 ## 3. 結果
 
