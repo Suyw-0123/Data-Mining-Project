@@ -21,6 +21,7 @@ dependencies = [
 neo-eda = "neo_hazard.eda:main"
 neo-train = "neo_hazard.train:main"
 neo-explain = "neo_hazard.explain:main"
+neo-benchmark = "neo_hazard.benchmark:main"
 
 [build-system]
 requires = ["hatchling"]

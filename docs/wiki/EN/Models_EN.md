@@ -214,4 +214,32 @@ Tuned variants of LightGBM and XGBoost have higher cross-validation PR-AUC score
 but they do not surpass the untuned Balanced Random Forest on the actual validation set.
 This suggests the tuning search was not wide enough to close the gap on this dataset.
 
+## 7. Training and Prediction Efficiency
+
+Because all models share the same features and train/test split, the efficiency comparison is
+fair. The table below is measured by `neo-benchmark` (CPU only, `n_jobs=-1` where supported):
+median fit time over the 63,585-row training set, batch scoring time over the full 13,626-row
+test set, and single-object scoring latency.
+
+| Model | Fit time (s) | Batch predict, 13,626 rows (ms) | Throughput (rows/s) | Single-row latency (ms) |
+|---|---:|---:|---:|---:|
+| Majority Baseline | 0.001 | 0.01 | — | 0.007 |
+| LightGBM | 0.39 | 5.7 | 2,400,000 | 0.77 |
+| HistGradientBoosting | 0.39 | 11.9 | 1,140,000 | 1.96 |
+| XGBoost | 0.57 | 3.5 | 3,850,000 | 1.18 |
+| Balanced Logistic Regression | 0.72 | 0.85 | 16,100,000 | 0.44 |
+| Logistic Regression | 0.77 | 0.80 | 17,100,000 | 0.46 |
+| **Balanced Random Forest** | **1.29** | **59.3** | **230,000** | **38.4** |
+
+The chosen Balanced Random Forest is the most expensive candidate — slowest to train and to
+score (the 38 ms single-row latency mainly reflects thread-dispatch overhead of the 120-tree
+ensemble on a one-row input). But NEO hazard screening is an offline batch task: scoring the
+entire test set in 59 ms (about 230,000 objects/s) far exceeds expert-review throughput, so
+prediction latency is not a binding constraint. This lets model selection be driven by screening
+quality (recall, PR-AUC, probability quality) rather than speed.
+
+> Reproduce with `uv run neo-benchmark`; results are written to
+> `reports/tables/efficiency_benchmark.csv` (run environment in the sibling `_environment.json`).
+> Absolute numbers vary with hardware, but the relative ordering across models is stable.
+
 [← Home](Home_EN.md)

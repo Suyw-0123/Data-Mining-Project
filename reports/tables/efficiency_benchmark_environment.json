@@ -1,0 +1,6 @@
+{
+  "python_version": "3.12.3",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "note": "Single-machine, CPU-only timings; n_jobs=-1 where the model supports it."
+}

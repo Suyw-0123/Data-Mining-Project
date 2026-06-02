@@ -199,6 +199,22 @@ Validation set 在 threshold = 0.5 下的主要結果如下：
 
 此結果表示，XGBoost 與 LightGBM 在調參搜尋中具競爭力，但其 validation set 表現仍未超過未調參的 balanced Random Forest。考量最終模型選擇以 validation PR-AUC、F1 與 ROC-AUC 綜合排序，本研究維持 `random_forest_balanced` 作為最終模型。
 
+### 4.1.2 訓練與預測效率
+
+由於所有模型共用同一套特徵管線與 train/test 切分，效率比較具備公平性。下表列出各基礎模型在 63,585 筆訓練集上的中位數 fit 時間、對完整 13,626 筆 test set 的批次評分時間，以及單筆物體的評分延遲（純 CPU，支援者使用 `n_jobs=-1`）。數據由 `neo-benchmark` 量測。
+
+| 模型 | 訓練時間（秒） | 批次預測 13,626 筆（毫秒） | 吞吐量（筆/秒） | 單筆延遲（毫秒） |
+|---|---:|---:|---:|---:|
+| Majority Baseline | 0.001 | 0.01 | — | 0.007 |
+| LightGBM | 0.39 | 5.7 | 2,400,000 | 0.77 |
+| HistGradientBoosting | 0.39 | 11.9 | 1,140,000 | 1.96 |
+| XGBoost | 0.57 | 3.5 | 3,850,000 | 1.18 |
+| Balanced Logistic Regression | 0.72 | 0.85 | 16,100,000 | 0.44 |
+| Logistic Regression | 0.77 | 0.80 | 17,100,000 | 0.46 |
+| Balanced Random Forest | 1.29 | 59.3 | 230,000 | 38.4 |
+
+被選為最終模型的 Balanced Random Forest 其實是所有候選中**成本最高**的：訓練最久（1.29 秒），評分也最慢（完整 test set 需 59 毫秒，單筆需 38 毫秒——後者反映 120 棵樹的 ensemble 對單列輸入的執行緒派發開銷）。Logistic Regression 單筆速度約快 70 倍，boosting 系列則介於兩者之間。但與即時服務情境（例如毫秒級的廣告點擊預測，Logistic Regression 的延遲優勢將具決定性）不同，NEO 危險篩選屬於離線、批次式的初篩步驟。在 59 毫秒內完成整個 test set（約每秒 230,000 筆）遠超專家審查所需的吞吐量，因此預測延遲並非限制因素。這也是本專案願意以 Random Forest 些微的額外成本換取更高 recall、PR-AUC 與機率品質的原因：在此資料規模下所有候選模型的效率都足夠，因此模型選擇由篩選品質而非速度主導。
+
 ### 4.2 Test Set 最終結果
 
 最終 test set 比較三種設定：

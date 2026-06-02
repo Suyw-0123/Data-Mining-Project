@@ -201,6 +201,22 @@ The lightweight tuning cross-validation PR-AUC results are:
 
 These results show that XGBoost and LightGBM are competitive during tuning, but their validation-set performance does not surpass the untuned balanced Random Forest. Based on validation PR-AUC, F1, and ROC-AUC together, this study keeps `random_forest_balanced` as the final model.
 
+### 4.1.2 Training and Prediction Efficiency
+
+Because the same feature pipeline and train/test split are shared across all models, we can also compare their computational cost fairly. The table below reports, for each base model, the median fit time over the 63,585-row training set, the batch scoring time over the full 13,626-row test set, and the single-object scoring latency (CPU only; `n_jobs=-1` where supported). Times are measured with `neo-benchmark`.
+
+| Model | Fit time (s) | Batch predict, 13,626 rows (ms) | Throughput (rows/s) | Single-row latency (ms) |
+|---|---:|---:|---:|---:|
+| Majority Baseline | 0.001 | 0.01 | — | 0.007 |
+| LightGBM | 0.39 | 5.7 | 2,400,000 | 0.77 |
+| HistGradientBoosting | 0.39 | 11.9 | 1,140,000 | 1.96 |
+| XGBoost | 0.57 | 3.5 | 3,850,000 | 1.18 |
+| Balanced Logistic Regression | 0.72 | 0.85 | 16,100,000 | 0.44 |
+| Logistic Regression | 0.77 | 0.80 | 17,100,000 | 0.46 |
+| Balanced Random Forest | 1.29 | 59.3 | 230,000 | 38.4 |
+
+The chosen model, Balanced Random Forest, is in fact the **most expensive** of all candidates: it takes the longest to train (1.29 s) and has the slowest scoring (59 ms for the entire test set, 38 ms for a single object — the latter reflecting thread-dispatch overhead of the 120-tree ensemble on a one-row input). Logistic Regression is roughly 70× faster per object, and the boosted-tree models fall in between. Unlike a real-time serving scenario — for example sub-millisecond ad click prediction, where Logistic Regression's latency advantage would be decisive — NEO hazard screening is an offline, batch-oriented triage step. Scoring the full test set in 59 ms (about 230,000 objects per second) is far beyond what expert review throughput requires, so prediction latency is not a binding constraint. This is why the project trades the small extra cost of Random Forest for its higher recall, PR-AUC, and probability quality: efficiency is adequate for all candidates at this data scale, and the decision is therefore driven by screening quality rather than speed.
+
 ### 4.2 Final Test Results
 
 The final test results compare three settings:

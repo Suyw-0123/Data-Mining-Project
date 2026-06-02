@@ -75,6 +75,13 @@ uv run neo-explain
 
 Each stage prints a short summary and the paths of files it wrote.
 
+Optionally, benchmark training and prediction efficiency across all base models
+(shared features and split for a fair comparison):
+
+```bash
+uv run neo-benchmark   # writes reports/tables/efficiency_benchmark.csv
+```
+
 ---
 
 ## Project structure

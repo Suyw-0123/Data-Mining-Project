@@ -1,0 +1,8 @@
+model,fit_time_s,predict_batch_ms,throughput_rows_per_s,predict_single_ms
+majority_baseline,0.0008,0.012,1166010328.1,0.0067
+lightgbm,0.3861,5.676,2400822.7,0.769
+hist_gradient_boosting,0.3922,11.941,1141093.9,1.9575
+xgboost,0.5665,3.535,3854893.0,1.1835
+logistic_regression_balanced,0.7233,0.845,16124422.8,0.4402
+logistic_regression,0.7717,0.797,17086439.9,0.4621
+random_forest_balanced,1.2949,59.319,229708.0,38.3968
