@@ -1,7 +1,8 @@
 .venv
-/.agents
-/.codex
-/.claude
+.agents/
+.codex/
+.claude/
+.sisyphus/
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
@@ -10,5 +11,6 @@ __pycache__/
 .mypy_cache/
 .uv-cache/
 models/*.joblib
+docs/plan
 
 final_presentation_guide/
