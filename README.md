@@ -13,8 +13,6 @@ with probability calibration, threshold tuning, and SHAP-based explainability.
 | Paper (ZH) | [Paper\_ZH.md](docs/paper/Paper_ZH.md) |
 | Proposal (EN) | [Proposal\_Report\_EN.md](docs/project-proposal/Proposal_Report_EN.md) |
 | Proposal (ZH) | [Proposal\_Report\_ZH.md](docs/project-proposal/Proposal_Report_ZH.md) |
-| Plan (EN) | [plan\_EN.md](docs/plan/plan_EN.md) |
-| Plan (ZH) | [plan\_ZH.md](docs/plan/plan_ZH.md) |
 | Dataset (Kaggle) | [NASA Nearest Earth Objects](https://www.kaggle.com/datasets/sameepvani/nasa-nearest-earth-objects) |
 
 ---
